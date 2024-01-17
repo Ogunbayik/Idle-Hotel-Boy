@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     [Header(" Settings ")]
     [SerializeField] private float movementSpeed;
+    [SerializeField] private float checkRadius;
+    [SerializeField] private LayerMask checkLayer;
 
     private Vector3 movementDirection;
 
@@ -20,6 +22,30 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+    {
+        HandleMovement();
+
+        CheckInteractableObject();
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, checkRadius);
+    }
+
+    private void CheckInteractableObject()
+    {
+        var checkSphere = Physics.CheckSphere(transform.position, checkRadius, checkLayer);
+        var interact = Input.GetKey(KeyCode.E);
+
+        if (checkSphere && interact)
+        {
+            Debug.Log("Interacted");
+        }
+    }
+
+    private void HandleMovement()
     {
         horizontalInput = Input.GetAxis(HORIZONTAL_INPUT);
         verticalInput = Input.GetAxis(VERTICAL_INPUT);

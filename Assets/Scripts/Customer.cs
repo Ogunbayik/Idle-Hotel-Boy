@@ -17,6 +17,7 @@ public class Customer : MonoBehaviour
 
     private Transform desiredPoint;
     [SerializeField] private Transform[] movementPoints;
+    
 
     private int moveIndex = 0;
 
@@ -26,14 +27,13 @@ public class Customer : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        currentState = States.Move;
     }
 
     void Start()
     {
-        waitTimer = startWaitTime;
-        distanceToPoint = GetDistanceMovePoint(movementPoints[moveIndex]);
+
     }
+
 
     void Update()
     {
