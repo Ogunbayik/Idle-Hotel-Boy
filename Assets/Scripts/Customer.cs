@@ -5,87 +5,62 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
-    private enum States
-    {
-        Wait,
-        Move
-    }
-
-    private States currentState;
+    [SerializeField] private Room room;
+    private GameObject door;
 
     private NavMeshAgent agent;
+    private Vector3 insidePosition;
+    private Vector3 waitDoorPosition;
 
-    private Transform desiredPoint;
-    [SerializeField] private Transform[] movementPoints;
-    
-
-    private int moveIndex = 0;
-
-    private float distanceToPoint;
-    private float startWaitTime = 3f;
+    private float startWaitTimer = 3f;
     private float waitTimer;
+
     private void Awake()
     {
+        room = GameObject.FindObjectOfType<Room>();
         agent = GetComponent<NavMeshAgent>();
     }
-
     void Start()
     {
-
+        insidePosition = room.gameObject.transform.localPosition;
+        waitDoorPosition = room.gameObject.transform.localPosition + new Vector3(0f, 0f, -3.5f);
+        waitTimer = startWaitTimer;
     }
-
 
     void Update()
     {
-        switch (currentState)
+        var distanceBetweenDoorPosition = Vector3.Distance(transform.position, waitDoorPosition);
+        if (distanceBetweenDoorPosition <= 0.1f)
         {
-            case States.Wait:
-                Waiting();
-                break;
-            case States.Move:
-                Moving(movementPoints[moveIndex]);
-                break;
+            waitTimer -= Time.deltaTime;
+
+            //Deactive room door
+
+            if (waitTimer <= 0f)
+            {
+                waitTimer = startWaitTimer;
+                room.IsOpen(true);
+            }
         }
 
-        if (distanceToPoint > 0.2f)
+        Movement();
+    }
+
+    private void Movement()
+    {
+        var isOpen = room.GetIsOpen();
+        if (!isOpen)
         {
-            currentState = States.Move;
+            HandleMovement(waitDoorPosition);
         }
         else
         {
-            currentState = States.Wait;
+            HandleMovement(insidePosition);
         }
     }
 
-    private void Waiting()
+    private void HandleMovement(Vector3 position)
     {
-        waitTimer -= Time.deltaTime;
-        
-        if(waitTimer <= 0)
-        {
-            GoNextDirection();
-            waitTimer = startWaitTime;
-        }
+        agent.SetDestination(position);
     }
-
-    private void Moving(Transform transform)
-    {
-        distanceToPoint = GetDistanceMovePoint(movementPoints[moveIndex]);
-        agent.SetDestination(transform.position);
-    }
-    private void GoNextDirection()
-    {
-        moveIndex++;
-        desiredPoint = movementPoints[moveIndex];
-        currentState = States.Move;
-        GetDistanceMovePoint(desiredPoint);
-    }
-
-    private float GetDistanceMovePoint(Transform point)
-    {
-        distanceToPoint = 100f;
-        distanceToPoint = Vector3.Distance(transform.position, point.transform.position);
-        return distanceToPoint;
-    }
-
 }

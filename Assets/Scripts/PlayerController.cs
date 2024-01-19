@@ -9,41 +9,24 @@ public class PlayerController : MonoBehaviour
 
     [Header(" Settings ")]
     [SerializeField] private float movementSpeed;
-    [SerializeField] private float checkRadius;
-    [SerializeField] private LayerMask checkLayer;
 
     private Vector3 movementDirection;
 
     private float horizontalInput;
     private float verticalInput;
+
+    private bool canMove;
+
     void Start()
     {
-        
+
     }
 
     void Update()
     {
         HandleMovement();
-
-        CheckInteractableObject();
-
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, checkRadius);
-    }
-
-    private void CheckInteractableObject()
-    {
-        var checkSphere = Physics.CheckSphere(transform.position, checkRadius, checkLayer);
-        var interact = Input.GetKey(KeyCode.E);
-
-        if (checkSphere && interact)
-        {
-            Debug.Log("Interacted");
-        }
-    }
 
     private void HandleMovement()
     {
@@ -53,6 +36,32 @@ public class PlayerController : MonoBehaviour
         movementDirection = new Vector3(horizontalInput, 0f, verticalInput);
         movementDirection.Normalize();
 
-        transform.Translate(movementDirection * movementSpeed * Time.deltaTime);
+        var playerHeight = 2f;
+        var playerRadius = 0.6f;
+        var movementDistance = movementSpeed * Time.deltaTime;
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, movementDirection, movementDistance);
+
+        if(!canMove)
+        {
+            Vector3 movementDirectionX = new Vector3(horizontalInput, 0f, 0f);
+            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, movementDirectionX, movementDistance);
+
+            if(canMove)
+            {
+                movementDirection = movementDirectionX;
+            }
+            else
+            {
+                Vector3 movementDirectionZ = new Vector3(0f, 0f, verticalInput);
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, movementDirectionZ, movementDistance);
+
+                if (canMove)
+                    movementDirection = movementDirectionZ;
+            }
+        }
+
+        if (canMove)
+            transform.position += movementDirection * movementDistance;
     }
+
 }

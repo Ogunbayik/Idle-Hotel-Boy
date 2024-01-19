@@ -90,7 +90,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 29500283120233792}
-  - component: {fileID: 29500283120233795}
+  - component: {fileID: 1322202593510600970}
   - component: {fileID: 29500283120233798}
   - component: {fileID: 29500283120233799}
   - component: {fileID: 29500283120233793}
@@ -116,7 +116,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &29500283120233795
+--- !u!114 &1322202593510600970
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,13 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd595932607d17d4b916c33ff0c3090f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allPoints:
-  - {fileID: 0}
+  room: {fileID: 0}
 --- !u!136 &29500283120233798
 CapsuleCollider:
   m_ObjectHideFlags: 0
