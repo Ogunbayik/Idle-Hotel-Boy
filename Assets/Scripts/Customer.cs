@@ -5,62 +5,88 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
-    [SerializeField] private Room room;
-    private GameObject door;
+    private enum MovePositions
+    {
+        Door,
+        Inside,
+        Outside
+    }
 
-    private NavMeshAgent agent;
+    private MovePositions currentPosition;
+
+    [SerializeField] private Room room;
+
     private Vector3 insidePosition;
     private Vector3 waitDoorPosition;
+    private Vector3 outsidePosition;
+    private Vector3 desiredPosition;
 
-    private float startWaitTimer = 3f;
-    private float waitTimer;
+    private float movementSpeed = 5f;
+    private float startOpenTimer = 3f;
+    private float openTimer;
+    private float startOutsideTimer = 5f;
+    private float outsideTimer;
 
     private void Awake()
     {
         room = GameObject.FindObjectOfType<Room>();
-        agent = GetComponent<NavMeshAgent>();
     }
     void Start()
     {
         insidePosition = room.gameObject.transform.localPosition;
         waitDoorPosition = room.gameObject.transform.localPosition + new Vector3(0f, 0f, -3.5f);
-        waitTimer = startWaitTimer;
+        outsidePosition = new Vector3(12.5f, 0f, -2f);
+        openTimer = startOpenTimer;
+        outsideTimer = startOutsideTimer;
+        desiredPosition = waitDoorPosition;
     }
 
     void Update()
     {
-        var distanceBetweenDoorPosition = Vector3.Distance(transform.position, waitDoorPosition);
-        if (distanceBetweenDoorPosition <= 0.1f)
+        switch(currentPosition)
         {
-            waitTimer -= Time.deltaTime;
+            case MovePositions.Door:
+                var distanceBetweenDoorPosition = Vector3.Distance(transform.position, desiredPosition);
+                if (distanceBetweenDoorPosition <= 0.1f)
+                {
+                    openTimer -= Time.deltaTime;
+                    room.OpenDoor();
 
-            //Deactive room door
+                    if (openTimer <= 0f)
+                    {
+                        openTimer = startOpenTimer;
+                        room.IsOpen(true);
+                        desiredPosition = insidePosition;
+                        currentPosition = MovePositions.Inside;
+                    }
+                }
+                break;
+            case MovePositions.Inside:
+                var distanceBetweenInsidePosition = Vector3.Distance(transform.position, desiredPosition);
+                if (distanceBetweenInsidePosition <= 0.1f)
+                {
+                    room.CloseDoor();
+                    outsideTimer -= Time.deltaTime;
 
-            if (waitTimer <= 0f)
-            {
-                waitTimer = startWaitTimer;
-                room.IsOpen(true);
-            }
+                    if( outsideTimer <= 0)
+                    {
+                        outsideTimer = startOutsideTimer;
+                        desiredPosition = waitDoorPosition;
+                        currentPosition = MovePositions.Outside;
+                    }
+                }
+                break;
+            case MovePositions.Outside:
+                room.OpenDoor();
+                break;
         }
 
-        Movement();
-    }
 
-    private void Movement()
-    {
-        var isOpen = room.GetIsOpen();
-        if (!isOpen)
-        {
-            HandleMovement(waitDoorPosition);
-        }
-        else
-        {
-            HandleMovement(insidePosition);
-        }
+        HandleMovement(desiredPosition);
     }
 
     private void HandleMovement(Vector3 position)
     {
-        agent.SetDestination(position);
+        transform.position = Vector3.MoveTowards(transform.position, position, movementSpeed * Time.deltaTime);
     }
 }
