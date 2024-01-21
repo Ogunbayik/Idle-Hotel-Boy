@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    private const string OPEN_ANIMATOR_HASH = "isOpen";
+    private const string CLOSE_ANIMATOR_HASH = "isClose";
+
+    private Animator animator;
 
     private bool isOpen;
+    private bool isReady;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         isOpen = false;
+        isReady = true;
     }
-
-    void Update()
-    {
-        
-    }
-
     public void OpenDoor()
     {
-        animator.SetBool("isOpen", true);
+        animator.SetBool(OPEN_ANIMATOR_HASH, true);
     }
     public void CloseDoor()
     {
-        animator.SetBool("isClose", true);
+        animator.SetBool(CLOSE_ANIMATOR_HASH, true);
     }
     public void IdleDoorAnimation()
     {
-        animator.SetBool("isOpen", false);
-        animator.SetBool("isClose", false);
+        animator.SetBool(OPEN_ANIMATOR_HASH, false);
+        animator.SetBool(CLOSE_ANIMATOR_HASH, false);
     }
 
     public void IsOpen(bool isOpen)
@@ -37,8 +37,13 @@ public class Room : MonoBehaviour
         this.isOpen = isOpen;
     }
 
-    public bool GetIsOpen()
+    public void IsReady(bool isReady)
     {
-        return isOpen;
+        this.isReady = isReady;
+    }
+
+    public bool GetIsReady()
+    {
+        return isReady;
     }
 }

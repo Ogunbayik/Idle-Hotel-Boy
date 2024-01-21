@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Furniture : MonoBehaviour
 {
+    private const string MESSUP_ANIMATOR_HASH = "MessUp";
+    private const string TIDYUP_ANIMATOR_HASH = "TidyUp";
+
     private Animator animator;
     private void Awake()
     {
@@ -12,11 +15,11 @@ public class Furniture : MonoBehaviour
 
     public void MessUp(bool isMessUp)
     {
-        animator.SetBool("MessUp", isMessUp);
+        animator.SetBool(MESSUP_ANIMATOR_HASH, isMessUp);
     }
 
     public void TidyUp(bool isTidyUp)
     {
-        animator.SetBool("TidyUp", isTidyUp);
+        animator.SetBool(TIDYUP_ANIMATOR_HASH, isTidyUp);
     }
 }

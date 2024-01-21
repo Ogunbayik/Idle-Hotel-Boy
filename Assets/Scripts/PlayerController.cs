@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     private const string HORIZONTAL_INPUT = "Horizontal";
     private const string VERTICAL_INPUT = "Vertical";
 
+    private Room room;
+
     [Header(" Settings ")]
     [SerializeField] private float movementSpeed;
 
@@ -19,14 +21,29 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-
+        room = null;
     }
 
     void Update()
     {
         HandleMovement();
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, movementDirection, out hit, 2f))
+        {
+            Debug.Log(hit.transform.gameObject.name);
+            room = hit.transform.gameObject.GetComponentInParent<Room>();
+        }
+        else
+        {
+            room = null;
+        }
+        
+
     }
 
+    #region Movement
 
     private void HandleMovement()
     {
@@ -63,5 +80,5 @@ public class PlayerController : MonoBehaviour
         if (canMove)
             transform.position += movementDirection * movementDistance;
     }
-
+    #endregion
 }
