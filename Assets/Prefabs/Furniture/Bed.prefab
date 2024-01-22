@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6148027008142091249}
   - component: {fileID: 6148027008143418327}
   - component: {fileID: 6148027008144384279}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: blanket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 6148027008142091251}
   - component: {fileID: 6148027008143418321}
   - component: {fileID: 6148027008144384273}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mattress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 6148027008142091253}
   - component: {fileID: 6148027008143418325}
   - component: {fileID: 6148027008144384277}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 1837131415}
   - component: {fileID: 8477004005711439647}
   - component: {fileID: 7338951152173265670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 6148027008142091261}
   - component: {fileID: 6148027008143418323}
   - component: {fileID: 6148027008144384275}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pillow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 6148027008142091263}
   - component: {fileID: 6148027008143418333}
   - component: {fileID: 6148027008144384285}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pillow 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

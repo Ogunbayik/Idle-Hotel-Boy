@@ -9,6 +9,8 @@ public class Room : MonoBehaviour
 
     private Animator animator;
 
+    private Furniture[] furnitures;
+
     private bool isOpen;
     private bool isReady;
 
@@ -17,7 +19,20 @@ public class Room : MonoBehaviour
         animator = GetComponent<Animator>();
         isOpen = false;
         isReady = true;
+
+        furnitures = GetComponentsInChildren<Furniture>();
     }
+
+    private void Update()
+    {
+        for (int i = 0; i < furnitures.Length; i++)
+        {
+            if (furnitures[i].GetIsTidy() == true)
+                isReady = true;
+        }
+
+    }
+
     public void OpenDoor()
     {
         animator.SetBool(OPEN_ANIMATOR_HASH, true);

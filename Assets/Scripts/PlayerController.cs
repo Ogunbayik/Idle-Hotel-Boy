@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private const string VERTICAL_INPUT = "Vertical";
 
     private Room room;
+    private Furniture closestFurniture;
 
     [Header(" Settings ")]
     [SerializeField] private float movementSpeed;
@@ -16,8 +17,12 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
+    private float leastDistance;
 
     private bool canMove;
+
+    [SerializeField] private LayerMask interactLayer;
+    [SerializeField] private LayerMask furnitureLayer;
 
     void Start()
     {
@@ -28,20 +33,61 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
 
-        RaycastHit hit;
+        CheckEnterPlace();
+        CheckClosestFurniture();
 
-        if(Physics.Raycast(transform.position, movementDirection, out hit, 2f))
+        var interact = Input.GetKey(KeyCode.E);
+        if(interact && closestFurniture != null)
         {
-            Debug.Log(hit.transform.gameObject.name);
-            room = hit.transform.gameObject.GetComponentInParent<Room>();
+            closestFurniture.TidyUp(true);
+        }
+    }
+
+    #region CheckPlace
+    private void CheckEnterPlace()
+    {
+        var checkInteractable = Physics.CheckSphere(transform.position, 1f, interactLayer);
+
+        if (checkInteractable)
+        {
+            room = FindObjectOfType<Room>();
+
+            if (Input.GetKey(KeyCode.E))
+                room.OpenDoor();
         }
         else
         {
             room = null;
         }
-        
-
     }
+    #endregion
+
+    #region CheckFurniture
+    private void CheckClosestFurniture()
+    {
+        var checkFurniture = Physics.CheckSphere(transform.position, 1f, furnitureLayer);
+        if (checkFurniture)
+        {
+            var allFurniture = FindObjectsOfType<Furniture>();
+
+            leastDistance = Mathf.Infinity;
+            foreach (var furniture in allFurniture)
+            {
+                var furnitureDistance = Vector3.Distance(transform.position, furniture.transform.position);
+                if (furnitureDistance < leastDistance)
+                {
+                    leastDistance = furnitureDistance;
+                    closestFurniture = furniture;
+                }
+            }
+        }
+        else
+        {
+            leastDistance = Mathf.Infinity;
+            closestFurniture = null;
+        }
+    }
+    #endregion
 
     #region Movement
 
